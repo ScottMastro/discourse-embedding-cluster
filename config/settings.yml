@@ -1,0 +1,11 @@
+plugins:
+  embedding_cluster_enabled:
+    default: true
+
+  cluster_update_frequency:
+    default: 1
+    client: false
+
+  x_axis_label:
+    default: "tSNE1"
+    client: true

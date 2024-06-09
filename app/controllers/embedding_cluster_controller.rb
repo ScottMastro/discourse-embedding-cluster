@@ -1,18 +1,18 @@
-# app/controllers/embedding_cluster_controller.rb
 
 module EmbeddingCluster
   class EmbeddingClusterController < ::ApplicationController
     def index
-      render json: { data: get_cluster_data }
+      # Your logic here, for example:
+      @data = fetch_cluster_data
+      render template: 'embedding_cluster/index'  # Renders the view
     end
 
     private
 
-    def get_cluster_data
-      # Replace with the actual path to your generated JSON file
-      JSON.parse(File.read('/path/to/embedding_cluster_data.json'))
-    rescue Errno::ENOENT
-      []
+    def fetch_cluster_data
+      # Replace with your actual data fetching logic
+      # Return sample data for demonstration
+      [{ x: 1, y: 2 }, { x: 3, y: 4 }]
     end
   end
 end

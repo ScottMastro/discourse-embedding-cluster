@@ -1,0 +1,3 @@
+en:
+  site_settings:
+    embedding_cluster_enabled: "Enable the embedding cluster plugin."

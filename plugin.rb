@@ -8,8 +8,7 @@
 # required_version: 2.7.0
 # transpile_js: true
 
-enabled_site_setting :d3_scatterplot_enabled
-enabled_site_setting :d3_scatterplot_update_frequency
+enabled_site_setting :embedding_cluster_enabled
 
 register_asset 'stylesheets/common/common.scss'
 register_asset 'stylesheets/mobile/mobile.scss', :mobile
@@ -28,14 +27,16 @@ after_initialize do
   require_relative 'app/controllers/embedding_cluster_controller.rb'
   #require_relative 'jobs/regular/update_embedding_cluster_data.rb'
 
+  # Define routes within the engine
   EmbeddingCluster::Engine.routes.draw do
     get '/explore' => 'embedding_cluster#index'
   end
 
+  # Mount the engine to the main application's routes
   Discourse::Application.routes.append do
     mount ::EmbeddingCluster::Engine, at: "/"
   end
-
+end
 #  if SiteSetting.embedding_cluster_enabled
 #    Jobs.enqueue_in(
 #      SiteSetting.embedding_cluster_update_frequency.days,
