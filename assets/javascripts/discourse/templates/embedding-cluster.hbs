@@ -5,5 +5,7 @@
 {{else if this.error}}
   <p class="error">{{this.error}}</p>
 {{else}}
-  <div id="chart" class="chart"></div>
+  <div id="chart">
+    <svg></svg> <!-- NVD3 requires an SVG element -->
+  </div>
 {{/if}}

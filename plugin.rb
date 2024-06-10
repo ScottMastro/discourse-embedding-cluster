@@ -16,7 +16,7 @@ register_asset 'stylesheets/mobile/mobile.scss', :mobile
 
 after_initialize do
     module ::EmbeddingCluster
-      PLUGIN_NAME = "embedding-cluster"
+      PLUGIN_NAME = "discourse-embedding-cluster"
     end
   
     class EmbeddingCluster::Engine < Rails::Engine
@@ -26,15 +26,11 @@ after_initialize do
 
   require_relative 'app/controllers/embedding_cluster_controller.rb'
   
-  #require_relative 'jobs/regular/update_embedding_cluster_data.rb'
-
-  # Define routes within the engine
   EmbeddingCluster::Engine.routes.draw do
     get '/explore' => 'embedding_cluster#index'
     get '/explore/data' => 'embedding_cluster#data'
   end
 
-  # Mount the engine to the main application's routes
   Discourse::Application.routes.append do
     mount ::EmbeddingCluster::Engine, at: "/"
   end

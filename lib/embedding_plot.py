@@ -25,26 +25,17 @@ def get_df(update=False):
     # Merge topic_df and embedding_df on id and topic_id
     merged_df = pd.merge(topic_df, embedding_df, left_on='id', right_on='topic_id')
 
-    # Filter rows where category_id is in topic_dict keys
-    filtered_df = merged_df[merged_df['category_id'].isin(topic_dict.keys())].copy()
-
-    # Map category IDs to names
-    filtered_df['category'] = filtered_df['category_id'].map(topic_dict)
-
     # Merge with tag_df to add tag information
-    tagged_df = pd.merge(filtered_df, tag_df, left_on='id', right_on='topic_id', how='left')
+    tagged_df = pd.merge(merged_df, tag_df, left_on='id', right_on='topic_id', how='left')
 
     # Group tags by topic_id and aggregate into a list
     tags_grouped = tagged_df.groupby('id')['tag_name'].apply(lambda x: list(x.dropna())).reset_index()
 
     # Merge the aggregated tags back into the main DataFrame
-    df = pd.merge(filtered_df, tags_grouped, on='id', how='left')
+    df = pd.merge(merged_df, tags_grouped, on='id', how='left')
 
     # Rename the column for clarity
     df.rename(columns={'tag_name': 'tags'}, inplace=True)
-
-    # Map category IDs to names
-    df['category'] = df['category_id'].map(topic_dict)
 
     # Parse the embeddings into numpy arrays
     def parse_embedding(embedding_str):
@@ -80,6 +71,15 @@ def do_tsne(df, update=False, perplex=15, lrate=200):
 df = get_df(update=False)
 print(df)
 df = do_tsne(df, update=False, perplex=15, lrate=50)
+
+selected_columns = ['id', 'title', 'created_at', 'views', 'posts_count', 'user_id', 'like_count',
+                    'category_id', 'slug', 'word_count', 'excerpt', 'topic_id', 'category', 'tags',
+                    'TSNE1', 'TSNE2']
+
+df_selected = df[selected_columns]
+
+
+df_selected.to_csv('tsne.csv', index=False)
 
 category_colors = {
     "collecting": "#a461ef",

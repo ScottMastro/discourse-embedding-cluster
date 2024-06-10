@@ -62,43 +62,73 @@ export default class EmbeddingClusterController extends Controller {
       });
   }
 
-  renderChart() {
-    const chartElement = document.getElementById('chart');
-    if (!chartElement) {
-      console.error("Element with ID 'chart' not found.");
-      return;
-    }
+renderChart() {
+  const chartElement = document.getElementById('chart');
+  if (!chartElement) {
+    console.error("Element with ID 'chart' not found.");
+    return;
+  }
 
-    const svg = d3.select(chartElement)
+  // Remove existing SVG to avoid duplicates
+  chartElement.innerHTML = '';
+
+  const svg = d3.select(chartElement)
     .append("svg")
     .attr("width", 600)
     .attr("height", 400)
-    
-    console.log("SVG element:", svg.node());
-    console.log("Cluster Data:", this.clusterData);
+    .style("border", "1px solid black"); // Optional: Add a border for visibility
 
-    if (!this.clusterData || this.clusterData.length === 0) {
-      console.error("No data to render");
-      return;
-    }
+  console.log("SVG element:", svg.node());
+  console.log("Cluster Data:", this.clusterData);
 
-    const xScale = d3.scaleLinear()
-      .domain([0, d3.max(this.clusterData, d => d.x)])
-      .range([0, 600]);
-
-    const yScale = d3.scaleLinear()
-      .domain([0, d3.max(this.clusterData, d => d.y)])
-      .range([400, 0]);
-
-    const circles = svg.selectAll("circle")
-      .data(this.clusterData)
-      .enter()
-      .append("circle")
-      .attr("cx", d => xScale(d.x))
-      .attr("cy", d => yScale(d.y))
-      .attr("r", 5)
-      .attr("fill", "steelblue");
-
-    console.log("Circles added:", circles.nodes());
+  if (!this.clusterData || this.clusterData.length === 0) {
+    console.error("No data to render");
+    return;
   }
+
+  const xScale = d3.scaleLinear()
+    .domain([0, d3.max(this.clusterData, d => d.x)])
+    .range([0, 600]);
+
+  const yScale = d3.scaleLinear()
+    .domain([0, d3.max(this.clusterData, d => d.y)])
+    .range([400, 0]);
+
+  const circles = svg.selectAll("circle")
+    .data(this.clusterData)
+    .enter()
+    .append("circle")
+    .attr("cx", d => xScale(d.x))
+    .attr("cy", d => yScale(d.y))
+    .attr("r", 5)
+    .attr("fill", "steelblue")
+    .on("mouseover", function(event, d) {
+      // Increase radius and change color on hover
+      d3.select(this)
+        .transition()
+        .duration(100)
+        .attr("r", 10)
+        .attr("fill", "orange");
+
+      // Optionally, you can display more information
+      svg.append("text")
+        .attr("x", xScale(d.x) + 10)
+        .attr("y", yScale(d.y) - 10)
+        .attr("id", "tooltip")
+        .text(`x: ${d.x}, y: ${d.y}`);
+    })
+    .on("mouseout", function(event, d) {
+      // Revert radius and color when mouse moves out
+      d3.select(this)
+        .transition()
+        .duration(100)
+        .attr("r", 5)
+        .attr("fill", "steelblue");
+
+      // Remove the tooltip
+      svg.select("#tooltip").remove();
+    });
+
+  console.log("Circles added:", circles.nodes());
+}
 }
