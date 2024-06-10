@@ -1,0 +1,9 @@
+<h1>Embedding Cluster</h1>
+
+{{#if this.isLoading}}
+  <p>Loading...</p>
+{{else if this.error}}
+  <p class="error">{{this.error}}</p>
+{{else}}
+  <div id="chart" class="chart"></div>
+{{/if}}

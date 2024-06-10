@@ -25,11 +25,13 @@ after_initialize do
     end
 
   require_relative 'app/controllers/embedding_cluster_controller.rb'
+  
   #require_relative 'jobs/regular/update_embedding_cluster_data.rb'
 
   # Define routes within the engine
   EmbeddingCluster::Engine.routes.draw do
     get '/explore' => 'embedding_cluster#index'
+    get '/explore/data' => 'embedding_cluster#data'
   end
 
   # Mount the engine to the main application's routes

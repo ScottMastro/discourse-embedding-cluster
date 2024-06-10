@@ -1,3 +1,3 @@
 export default function () {
-    this.route("embeding-cluster", { path:"/explore" });
+    this.route("embedding-cluster", { path:"/explore" });
   }
